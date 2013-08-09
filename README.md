@@ -23,7 +23,7 @@ git submodule add https://github.com/deseretdigital/vagrant-helper.git helper
 
 ### Other
 
-You can [download the latest vagrant-helper](https://github.com/deseretdigital/vagrant-helper/archive/master.zip), 
+You can [download the latest vagrant-helper](https://github.com/deseretdigital/vagrant-./helper/archive/master.zip), 
 create a directory in your vagrant project called "helper" and then move the
 unziped files there.
 
@@ -35,9 +35,9 @@ At the top of your ```vagrantfile``` you can include the helper libraries like
 so:
 
 ```ruby
-require 'helper/core'		# Required
-require 'helper/utils'		# If you want to use the Utils helpers
-require 'helper/config'	# If you want to use the Config helpers
+require './helper/core'		# Required
+require './helper/utils'		# If you want to use the Utils helpers
+require './helper/config'	# If you want to use the Config helpers
 ```
 
 ## User Configs
@@ -65,8 +65,8 @@ Then in your Vagrantfile you can load the User Preferences. You can even check t
 sure they were loaded.
 
 ```ruby
-require 'helper/core'		# Required
-require 'helper/config'	# If you want to use the Config helpers
+require './helper/core'		# Required
+require './helper/config'	# If you want to use the Config helpers
 
 Vagrant.configure("2") do |config|
     # Load the user preferences in config/prefs.yml
