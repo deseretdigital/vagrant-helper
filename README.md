@@ -112,8 +112,8 @@ so it would be nice not to require them to have NFS on. So here is a way to
 do it with the Platform utils:
 
 
-*** Note, right now there I can't find a programatic way to detect which provider
-is being used, so it's best to have that in your config file. See above. ***
+**Note, right now there I can't find a programatic way to detect which provider
+is being used, so it's best to have that in your config file. See above.**
 
 ```ruby
 provider = prefs['vm']['provider'].to_sym
