@@ -40,7 +40,7 @@ require 'lib/utils'		# If you want to use the Utils helpers
 require 'lib/config'	# If you want to use the Config helpers
 ```
 
-### User Configs
+## User Configs
 
 Sometimes it is helpful to allow some customization of a Vagrant project for things
 like the location of files you would like to mount. Many times a project will
@@ -50,12 +50,11 @@ developer to developer.
 You can create in your project the ```config``` directory and add a ```prefs.yml```
 file. It can then look something like this:
 
-```yaml
+```yml
 vm:
   provider: virtualbox
   box:
     name: precise
-    path: base
   network: 10.13.37.10
   forward:
     http: 8080
@@ -86,3 +85,51 @@ Finally, to use a config setting you can just do this:
 config.vm.network :hostonly, ip: prefs['vm']['network']
 ```
 
+## Platform Detection
+
+We have developers on Linux, Mac, and Windows (32 and 64 bit). Sometimes there are 
+certain settings that are more performant than others for a given Provider and OS.
+
+Our Utils helper allows you to detect certain platform settings so you can only
+apply certain settings to a particular environment. 
+
+### 64bit vs 32bit
+
+You can't have a 64bit guest on a 32bit host, so you can decide which basebox to use
+like so:
+
+```ruby
+arch = Vagrant::Util::Platform::bit64? ? 64 : 32
+config.vm.box = "precise#{arch}"
+```
+
+### Is Posix?
+
+If you're on VirtualBox & a Posix based machine (i.e. Mac, Linux) with a large amount of files to share with the 
+guest machine, you likely will run into performance problems. So its recommended
+to use NFS. However, other providers, or other OSes, do not have this problem
+so it would be nice not to require them to have NFS on. So here is a way to
+do it with the Platform utils:
+
+
+*** Note, right now there I can't find a programatic way to detect which provider
+is being used, so it's best to have that in your config file. See above. ***
+
+```ruby
+provider = prefs['vm']['provider'].to_sym
+
+config.vm.synced_folder(
+    '/path/to/host/www', 	# Host
+    "/var/www",	 			# Guest
+
+    # NFS on *nix-based platforms to resolve performance issues
+    :nfs => (Vagrant::Util::Platform::posix? and provider == :virtualbox)
+)
+```
+
+### Other Detections
+
+```ruby
+Vagrant::Util::Platform::mac?
+Vagrant::Util::Platform::windows?
+```
